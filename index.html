@@ -1,1068 +1,1007 @@
 <!DOCTYPE html>
-<html lang="fr-CA">
+<html lang="fr-CA" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Le P'tit Refuge - Serveur Discord Québécois</title>
+    <meta name="description" content="Le P'tit Refuge - Serveur Discord Québécois convivial pour discuter, jouer et rencontrer de nouvelles personnes">
+    <meta name="keywords" content="Discord, Québec, Communauté, Gaming, ERLC, Roleplay">
+    <title>Le P'tit Refuge | Serveur Discord Québécois</title>
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        primary: '#0055A4',
+                        secondary: '#00A8E8',
+                        accent: '#FFD700',
+                        dark: '#0a0e27',
+                        darker: '#050811',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'gradient': 'gradient 15s ease infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        gradient: {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bleu-quebec: #0055A4;
-            --bleu-fonce: #003d7a;
-            --blanc: #FFFFFF;
-            --gris-fonce: #1a1a2e;
-            --gris: #16213e;
-            --accent: #00a8e8;
-        }
-
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--gris-fonce);
-            color: var(--blanc);
-            line-height: 1.6;
+            background-color: #050811;
+            color: #ffffff;
             overflow-x: hidden;
         }
 
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(26, 26, 46, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            padding: 1rem 5%;
-            box-shadow: 0 2px 20px rgba(0, 85, 164, 0.3);
-        }
-
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--blanc);
-            text-decoration: none;
-        }
-
-        .logo img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 3px solid var(--bleu-quebec);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--blanc);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-            position: relative;
-        }
-
-        .nav-links a:hover {
-            color: var(--accent);
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent);
-            transition: width 0.3s;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .mobile-menu {
-            display: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        /* Hero Section */
-        .hero {
-            margin-top: 80px;
-            padding: 6rem 5%;
-            background: linear-gradient(135deg, var(--gris-fonce) 0%, var(--bleu-quebec) 100%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '⚜';
-            position: absolute;
-            font-size: 400px;
-            opacity: 0.05;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .hero-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-
-        .hero-content h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--blanc) 0%, var(--accent) 100%);
+        .gradient-text {
+            background: linear-gradient(135deg, #00A8E8 0%, #0055A4 50%, #FFD700 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            background-size: 200% 200%;
+            animation: gradient 8s ease infinite;
         }
 
-        .hero-content .subtitle {
-            font-size: 1.3rem;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 2rem;
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        .hero-stats {
-            display: flex;
-            gap: 2rem;
-            margin: 2rem 0;
+        .glass-nav {
+            background: rgba(10, 14, 39, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .stat {
-            text-align: center;
+        .hero-gradient {
+            background: radial-gradient(ellipse at top, rgba(0, 168, 232, 0.15), transparent 50%),
+                        radial-gradient(ellipse at bottom, rgba(0, 85, 164, 0.2), transparent 50%);
         }
 
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--accent);
+        .grid-pattern {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
         }
 
-        .stat-label {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
+        .glow {
+            box-shadow: 0 0 40px rgba(0, 168, 232, 0.3);
         }
 
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
+        .glow-hover:hover {
+            box-shadow: 0 0 60px rgba(0, 168, 232, 0.5);
         }
 
-        .btn {
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
         }
 
-        .btn-primary {
-            background: var(--bleu-quebec);
-            color: var(--blanc);
-            box-shadow: 0 4px 15px rgba(0, 85, 164, 0.4);
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0a0e27;
         }
 
-        .btn-primary:hover {
-            background: var(--bleu-fonce);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 85, 164, 0.6);
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #0055A4;
+            border-radius: 4px;
         }
 
-        .btn-secondary {
-            background: transparent;
-            color: var(--blanc);
-            border: 2px solid var(--blanc);
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #00A8E8;
         }
 
-        .btn-secondary:hover {
-            background: var(--blanc);
-            color: var(--gris-fonce);
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
         }
 
-        .hero-image {
-            text-align: center;
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .hero-image img {
-            max-width: 100%;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            border: 5px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Sections générales */
-        section {
-            padding: 5rem 5%;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            position: relative;
-            display: inline-block;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .section-title::after {
-            content: '⚜';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1.5rem;
-            color: var(--accent);
-        }
-
-        .section-subtitle {
-            text-align: center;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 3rem;
-            font-size: 1.1rem;
-        }
-
-        /* About Section */
-        .about {
-            background: var(--gris);
-        }
-
-        .about-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .about-card {
-            background: var(--gris-fonce);
-            padding: 2rem;
-            border-radius: 15px;
-            border-left: 4px solid var(--bleu-quebec);
-            transition: transform 0.3s;
-        }
-
-        .about-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .about-card i {
-            font-size: 2.5rem;
-            color: var(--accent);
-            margin-bottom: 1rem;
-        }
-
-        .about-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .about-card p {
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        /* Rules Section */
-        .rules {
-            background: var(--gris-fonce);
-        }
-
-        .rules-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .rule-card {
-            background: linear-gradient(135deg, var(--gris) 0%, var(--gris-fonce) 100%);
-            padding: 2rem;
-            border-radius: 15px;
-            border: 1px solid rgba(0, 85, 164, 0.3);
-            transition: all 0.3s;
-        }
-
-        .rule-card:hover {
-            border-color: var(--bleu-quebec);
-            box-shadow: 0 10px 30px rgba(0, 85, 164, 0.2);
-        }
-
-        .rule-card h3 {
-            color: var(--accent);
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .rule-card ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .rule-card li {
-            padding: 0.5rem 0;
-            padding-left: 1.5rem;
-            position: relative;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .rule-card li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--accent);
-            font-weight: bold;
-        }
-
-        /* Partners Section */
-        .partners {
-            background: var(--gris);
-        }
-
-        .partners-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .partner-card {
-            background: var(--gris-fonce);
-            padding: 2rem;
-            border-radius: 15px;
-            text-align: center;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-        }
-
-        .partner-card:hover {
-            border-color: var(--bleu-quebec);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 85, 164, 0.3);
-        }
-
-        .partner-card h3 {
-            color: var(--accent);
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-
-        .partner-card p {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 1.5rem;
-            font-size: 0.95rem;
-        }
-
-        .partner-stats {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
-        }
-
-        .partner-stats span {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .online {
-            color: #43b581;
-        }
-
-        /* Applications Section */
-        .applications {
-            background: linear-gradient(135deg, var(--gris-fonce) 0%, var(--bleu-quebec) 100%);
-        }
-
-        .app-container {
-            background: var(--gris);
-            padding: 3rem;
-            border-radius: 20px;
-            margin-top: 2rem;
-            text-align: center;
-        }
-
-        .app-container h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-        }
-
-        .app-container p {
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 2rem;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .app-features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-            text-align: left;
-        }
-
-        .app-feature {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .app-feature i {
-            color: var(--accent);
-            font-size: 1.5rem;
-        }
-
-        /* Channels Section */
-        .channels {
-            background: var(--gris-fonce);
-        }
-
-        .channels-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-
-        .channel-category {
-            background: var(--gris);
-            padding: 1.5rem;
-            border-radius: 10px;
-        }
-
-        .channel-category h4 {
-            color: var(--accent);
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-            border-bottom: 2px solid var(--bleu-quebec);
-            padding-bottom: 0.5rem;
-        }
-
-        .channel-list {
-            list-style: none;
-        }
-
-        .channel-list li {
-            padding: 0.4rem 0;
-            color: rgba(255, 255, 255, 0.8);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.95rem;
-        }
-
-        .channel-list li::before {
-            content: '#';
-            color: var(--bleu-quebec);
-            font-weight: bold;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--gris);
-            padding: 3rem 5%;
-            text-align: center;
-            border-top: 3px solid var(--bleu-quebec);
-        }
-
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .footer-logo {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin: 2rem 0;
-            flex-wrap: wrap;
-        }
-
-        .footer-links a {
-            color: var(--blanc);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-links a:hover {
-            color: var(--accent);
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .social-links a {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--bleu-quebec);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--blanc);
-            font-size: 1.5rem;
-            transition: all 0.3s;
-        }
-
-        .social-links a:hover {
-            background: var(--accent);
-            transform: translateY(-3px);
-        }
-
-        .copyright {
-            color: rgba(255, 255, 255, 0.6);
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Responsive */
-        @media (max-width: 968px) {
-            .nav-links {
-                display: none;
-            }
-
-            .mobile-menu {
-                display: block;
-            }
-
-            .hero-container {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-content h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero-stats {
-                justify-content: center;
-            }
-
-            section {
-                padding: 3rem 5%;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in {
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        /* Fleurs de lys décoratives */
-        .fleur-decoration {
+        .fleur-bg {
             position: absolute;
             opacity: 0.03;
-            font-size: 200px;
+            font-size: 400px;
             pointer-events: none;
-        }
-
-        .fleur-1 {
-            top: 10%;
-            left: 5%;
-        }
-
-        .fleur-2 {
-            bottom: 10%;
-            right: 5%;
+            z-index: 0;
         }
     </style>
 </head>
-<body>
+<body class="custom-scrollbar">
+
     <!-- Navigation -->
-    <nav>
-        <div class="nav-container">
-            <a href="#" class="logo">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%230055A4'/%3E%3Ctext x='50' y='65' font-size='50' text-anchor='middle' fill='white'%3E⚜%3C/text%3E%3C/svg%3E" alt="Logo">
-                Le P'tit Refuge
-            </a>
-            <ul class="nav-links">
-                <li><a href="#accueil">Accueil</a></li>
-                <li><a href="#apropos">À propos</a></li>
-                <li><a href="#regles">Règles</a></li>
-                <li><a href="#partenaires">Partenaires</a></li>
-                <li><a href="#candidature">Candidature</a></li>
-                <li><a href="#salons">Salons</a></li>
-            </ul>
-            <div class="mobile-menu">
-                <i class="fas fa-bars"></i>
+    <nav class="glass-nav fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center space-x-3 group cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <img src="https://cdn.discordapp.com/attachments/1459601679346303117/1528041382135074876/zj598dz.png" 
+                         alt="Logo" 
+                         class="w-12 h-12 rounded-full border-2 border-primary group-hover:border-secondary transition-all duration-300 group-hover:scale-110">
+                    <span class="font-serif text-2xl font-bold gradient-text">Le P'tit Refuge</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#accueil" class="text-gray-300 hover:text-secondary transition-colors duration-300 text-sm font-medium uppercase tracking-wider">Accueil</a>
+                    <a href="#apropos" class="text-gray-300 hover:text-secondary transition-colors duration-300 text-sm font-medium uppercase tracking-wider">À propos</a>
+                    <a href="#stats" class="text-gray-300 hover:text-secondary transition-colors duration-300 text-sm font-medium uppercase tracking-wider">Statistiques</a>
+                    <a href="#partenaires" class="text-gray-300 hover:text-secondary transition-colors duration-300 text-sm font-medium uppercase tracking-wider">Partenaires</a>
+                    <a href="#regles" class="text-gray-300 hover:text-secondary transition-colors duration-300 text-sm font-medium uppercase tracking-wider">Règles</a>
+                    <a href="#candidature" class="bg-primary hover:bg-secondary px-6 py-2.5 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 text-sm">Candidature</a>
+                </div>
+
+                <button class="md:hidden text-white" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden hidden glass-nav border-t border-gray-800">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="#accueil" class="block px-3 py-2 text-gray-300 hover:text-secondary hover:bg-white/5 rounded-lg">Accueil</a>
+                <a href="#apropos" class="block px-3 py-2 text-gray-300 hover:text-secondary hover:bg-white/5 rounded-lg">À propos</a>
+                <a href="#stats" class="block px-3 py-2 text-gray-300 hover:text-secondary hover:bg-white/5 rounded-lg">Statistiques</a>
+                <a href="#partenaires" class="block px-3 py-2 text-gray-300 hover:text-secondary hover:bg-white/5 rounded-lg">Partenaires</a>
+                <a href="#regles" class="block px-3 py-2 text-gray-300 hover:text-secondary hover:bg-white/5 rounded-lg">Règles</a>
+                <a href="#candidature" class="block px-3 py-2 text-primary font-semibold">Candidature</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero" id="accueil">
-        <div class="hero-container">
-            <div class="hero-content fade-in">
-                <h1>Le P'tit Refuge</h1>
-                <p class="subtitle">️ Ton coin tranquille sur Discord pour discuter, jouer et rencontrer de nouvelles personnes dans une ambiance québécoise chaleureuse!</p>
-                
-                <div class="hero-stats">
-                    <div class="stat">
-                        <div class="stat-number">38</div>
-                        <div class="stat-label">Salons</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">30</div>
-                        <div class="stat-label">Rôles</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">24/7</div>
-                        <div class="stat-label">Actif</div>
-                    </div>
-                </div>
+    <section id="accueil" class="relative min-h-screen flex items-center justify-center hero-gradient grid-pattern overflow-hidden pt-20">
+        <div class="fleur-bg top-20 left-10">⚜</div>
+        <div class="fleur-bg bottom-20 right-10 rotate-180">⚜</div>
+        
+        <!-- Animated Background Elements -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse-slow"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 2s;"></div>
+        </div>
 
-                <div class="hero-buttons">
-                    <a href="https://discord.gg/NYUWnWTb2g" target="_blank" class="btn btn-primary">
-                        <i class="fab fa-discord"></i>
-                        Rejoindre le serveur
-                    </a>
-                    <a href="#regles" class="btn btn-secondary">
-                        <i class="fas fa-scroll"></i>
-                        Voir les règles
-                    </a>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="inline-flex items-center space-x-2 glass-card px-6 py-3 rounded-full mb-8 animate-float">
+                <span class="flex h-3 w-3 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                </span>
+                <span class="text-sm font-medium text-gray-300">Serveur Actif 24/7</span>
+            </div>
+
+            <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl font-black mb-6 leading-tight">
+                Bienvenue au<br>
+                <span class="gradient-text">P'tit Refuge</span>
+            </h1>
+
+            <p class="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto mb-12 font-light">
+                Ton coin tranquille québécois pour discuter, jouer et créer des liens dans une ambiance chaleureuse et conviviale.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+                <a href="https://discord.gg/NYUWnWTb2g" target="_blank" 
+                   class="group relative px-8 py-4 bg-primary rounded-full font-bold text-lg overflow-hidden glow-hover transition-all duration-300 transform hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <span class="relative flex items-center space-x-2">
+                        <i class="fab fa-discord text-2xl"></i>
+                        <span>Rejoindre le serveur</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </span>
+                </a>
+                
+                <a href="#apropos" 
+                   class="px-8 py-4 glass-card rounded-full font-semibold text-lg hover:bg-white/10 transition-all duration-300 flex items-center space-x-2">
+                    <i class="fas fa-play-circle"></i>
+                    <span>Découvrir</span>
+                </a>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                <div class="glass-card p-6 rounded-2xl text-center transform hover:scale-105 transition-transform duration-300">
+                    <div class="text-3xl md:text-4xl font-bold text-secondary mb-2" id="stat-members">
+                        <!-- DYNAMIC: Member count -->
+                        <span class="animate-pulse">--</span>
+                    </div>
+                    <div class="text-sm text-gray-400 uppercase tracking-wider">Membres</div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center transform hover:scale-105 transition-transform duration-300">
+                    <div class="text-3xl md:text-4xl font-bold text-secondary mb-2" id="stat-online">
+                        <!-- DYNAMIC: Online count -->
+                        <span class="animate-pulse">--</span>
+                    </div>
+                    <div class="text-sm text-gray-400 uppercase tracking-wider">En ligne</div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center transform hover:scale-105 transition-transform duration-300">
+                    <div class="text-3xl md:text-4xl font-bold text-secondary mb-2">38</div>
+                    <div class="text-sm text-gray-400 uppercase tracking-wider">Salons</div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center transform hover:scale-105 transition-transform duration-300">
+                    <div class="text-3xl md:text-4xl font-bold text-secondary mb-2">30</div>
+                    <div class="text-sm text-gray-400 uppercase tracking-wider">Rôles</div>
                 </div>
             </div>
-            <div class="hero-image fade-in">
-                <img src="https://i.imgur.com/your-server-image.png" alt="Le P'tit Refuge - Serveur Discord Québécois" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 300%22%3E%3Crect fill=%22%230055A4%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 font-size=%2280%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22white%22%3E%3C/text%3E%3Ctext x=%2250%25%22 y=%2270%25%22 font-size=%2230%22 text-anchor=%22middle%22 fill=%22white%22%3ELe P%27tit Refuge%3C/text%3E%3C/svg%3E'">
-            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i class="fas fa-chevron-down text-2xl text-gray-500"></i>
         </div>
     </section>
 
     <!-- About Section -->
-    <section class="about" id="apropos">
-        <div class="container">
-            <h2 class="section-title">À propos du serveur</h2>
-            <p class="section-subtitle">Un serveur Discord créé pour offrir un espace convivial et accueillant</p>
-            
-            <div class="about-grid">
-                <div class="about-card">
-                    <i class="fas fa-comments"></i>
-                    <h3>Discussions Actives</h3>
-                    <p>Des salons textuels pour parler de tout et de rien, partager tes meilleurs mèmes ou simplement chill au quotidien.</p>
+    <section id="apropos" class="py-32 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20 reveal">
+                <h2 class="font-serif text-4xl md:text-6xl font-bold mb-6">
+                    Pourquoi nous <span class="gradient-text">rejoindre</span>?
+                </h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                    Plus qu'un simple serveur Discord, Le P'tit Refuge est une communauté vivante et bienveillante
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="glass-card p-8 rounded-3xl hover:transform hover:scale-105 transition-all duration-500 group reveal">
+                    <div class="w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary/30 transition-colors">
+                        <i class="fas fa-comments text-3xl text-secondary"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Communauté Active</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Des discussions animées 24h/24, des événements réguliers et une communauté toujours prête à échanger.
+                    </p>
                 </div>
-                <div class="about-card">
-                    <i class="fas fa-microphone"></i>
-                    <h3>Salons Vocaux</h3>
-                    <p>Des salons vocaux très actifs pour discuter posément, passer le temps ou lancer des sessions gaming improvisées.</p>
+
+                <!-- Feature 2 -->
+                <div class="glass-card p-8 rounded-3xl hover:transform hover:scale-105 transition-all duration-500 group reveal">
+                    <div class="w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary/30 transition-colors">
+                        <i class="fas fa-microphone text-3xl text-secondary"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Salons Vocaux</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Des salons vocaux toujours animés pour discuter, jouer ou simplement passer du temps ensemble.
+                    </p>
                 </div>
-                <div class="about-card">
-                    <i class="fas fa-shield-alt"></i>
-                    <h3>Staff à l'écoute</h3>
-                    <p>Une équipe présente pour s'assurer que le Refuge reste un endroit sain, sécurisé et agréable pour tous.</p>
+
+                <!-- Feature 3 -->
+                <div class="glass-card p-8 rounded-3xl hover:transform hover:scale-105 transition-all duration-500 group reveal">
+                    <div class="w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary/30 transition-colors">
+                        <i class="fas fa-shield-alt text-3xl text-secondary"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Staff Dévoué</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Une équipe de modération présente, à l'écoute et toujours disponible pour t'aider.
+                    </p>
                 </div>
-                <div class="about-card">
-                    <i class="fas fa-ticket-alt"></i>
-                    <h3>Support par Ticket</h3>
-                    <p>Un système de tickets ultra-rapide pour toutes tes demandes et un règlement clair pour éviter toute toxicité.</p>
+
+                <!-- Feature 4 -->
+                <div class="glass-card p-8 rounded-3xl hover:transform hover:scale-105 transition-all duration-500 group reveal">
+                    <div class="w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary/30 transition-colors">
+                        <i class="fas fa-gamepad text-3xl text-secondary"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Gaming & ERLC</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Passionné par ERLC et les jeux de rôle? Rejoins des sessions de jeu organisées régulièrement.
+                    </p>
                 </div>
-                <div class="about-card">
-                    <i class="fas fa-gamepad"></i>
-                    <h3>Gaming & ERLC</h3>
-                    <p>Une communauté passionnée par les jeux, particulièrement Emergency Response: Liberty County (ERLC).</p>
+
+                <!-- Feature 5 -->
+                <div class="glass-card p-8 rounded-3xl hover:transform hover:scale-105 transition-all duration-500 group reveal">
+                    <div class="w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary/30 transition-colors">
+                        <i class="fas fa-ticket-alt text-3xl text-secondary"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Support Rapide</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Système de tickets efficace pour toutes tes demandes et questions. Réponse garantie.
+                    </p>
                 </div>
-                <div class="about-card">
-                    <i class="fas fa-heart"></i>
-                    <h3>Ambiance Familiale</h3>
-                    <p>Conçu comme un petit bistro de quartier, c'est l'endroit parfait pour décompresser et faire de nouvelles rencontres.</p>
+
+                <!-- Feature 6 -->
+                <div class="glass-card p-8 rounded-3xl hover:transform hover:scale-105 transition-all duration-500 group reveal">
+                    <div class="w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary/30 transition-colors">
+                        <i class="fas fa-heart text-3xl text-secondary"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Ambiance Familiale</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Un environnement bienveillant où chacun se sent chez soi. Respect et bonne humeur garantis.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Rules Section -->
-    <section class="rules" id="regles">
-        <div class="container">
-            <h2 class="section-title">Règlement du serveur</h2>
-            <p class="section-subtitle">Pour garantir une bonne ambiance pour tous les membres</p>
-            
-            <div class="rules-container">
-                <div class="rule-card">
-                    <h3><i class="fas fa-handshake"></i> Respect avant tout</h3>
-                    <ul>
-                        <li>Traite tous les membres avec respect et politesse</li>
-                        <li>Insultes, harcèlement et intimidation interdits</li>
-                        <li>Pas de discrimination ni de propos haineux</li>
-                    </ul>
-                </div>
-                <div class="rule-card">
-                    <h3><i class="fas fa-comment-dots"></i> Discussions appropriées</h3>
-                    <ul>
-                        <li>Conversations respectueuses et adaptées aux salons</li>
-                        <li>Évite les disputes inutiles</li>
-                        <li>Pas de provocations</li>
-                    </ul>
-                </div>
-                <div class="rule-card">
-                    <h3><i class="fas fa-phone-volume"></i> Appels vocaux</h3>
-                    <ul>
-                        <li>Respecte les personnes présentes en vocal</li>
-                        <li>Évite les cris et bruits dérangeants</li>
-                        <li>Pas de micros saturés</li>
-                        <li>Laisse chacun s'exprimer</li>
-                    </ul>
-                </div>
-                <div class="rule-card">
-                    <h3><i class="fas fa-users"></i> Rencontres amicales</h3>
-                    <ul>
-                        <li>Serveur destiné aux rencontres amicales uniquement</li>
-                        <li>Respecte les limites et le consentement</li>
-                        <li>Ne force jamais le partage d'informations</li>
-                    </ul>
-                </div>
-                <div class="rule-card">
-                    <h3><i class="fas fa-bullhorn"></i> Publicité</h3>
-                    <ul>
-                        <li>Publicité interdite sans autorisation</li>
-                        <li>Pas de promotion non autorisée</li>
-                        <li>Pas de recrutement sauvage</li>
-                    </ul>
-                </div>
-                <div class="rule-card">
-                    <h3><i class="fas fa-ban"></i> Contenu interdit</h3>
-                    <ul>
-                        <li>Aucun contenu illégal ou choquant</li>
-                        <li>Pas de contenu pornographique ou violent</li>
-                        <li>Pas de spam ni de flood</li>
-                    </ul>
-                </div>
-                <div class="rule-card">
-                    <h3><i class="fas fa-user-shield"></i> Confidentialité</h3>
-                    <ul>
-                        <li>Ne partage pas les infos personnelles</li>
-                        <li>Respecte la vie privée de chacun</li>
-                        <li>Protection des données membres</li>
-                    </ul>
-                </div>
-                <div class="rule-card">
-                    <h3><i class="fas fa-user-tag"></i> Pseudonymes</h3>
-                    <ul>
-                        <li>Utilise un pseudonyme approprié</li>
-                        <li>Photos de profil appropriées</li>
-                        <li>Pas de contenu offensant</li>
-                    </ul>
-                </div>
-                <div class="rule-card">
-                    <h3><i class="fas fa-gavel"></i> Modération</h3>
-                    <ul>
-                        <li>Respecte les décisions du staff</li>
-                        <li>Contacte un membre en MP en cas de désaccord</li>
-                        <li>Reste calme et courtois</li>
-                    </ul>
+    <!-- Dynamic Stats Section -->
+    <section id="stats" class="py-32 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="glass-card rounded-3xl p-12 md:p-20 reveal">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h2 class="font-serif text-4xl md:text-5xl font-bold mb-6">
+                            Statistiques en <span class="gradient-text">temps réel</span>
+                        </h2>
+                        <p class="text-gray-400 text-lg mb-8">
+                            Notre communauté ne cesse de grandir. Rejoins-nous et fais partie de l'aventure!
+                        </p>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                                <span class="text-gray-300">Nouveaux membres cette semaine</span>
+                                <span class="text-2xl font-bold text-secondary" id="stat-new-members">
+                                    <!-- DYNAMIC: New members this week -->
+                                    --
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                                <span class="text-gray-300">Messages aujourd'hui</span>
+                                <span class="text-2xl font-bold text-secondary" id="stat-messages-today">
+                                    <!-- DYNAMIC: Messages today -->
+                                    --
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                                <span class="text-gray-300">Pic de connexion</span>
+                                <span class="text-2xl font-bold text-secondary" id="stat-peak-online">
+                                    <!-- DYNAMIC: Peak online -->
+                                    --
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary to-secondary rounded-3xl blur-2xl opacity-30"></div>
+                        <div class="relative glass-card p-8 rounded-3xl">
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                                        <span class="text-gray-300">Serveur en ligne</span>
+                                    </div>
+                                    <span class="text-green-400 font-semibold">Opérationnel</span>
+                                </div>
+                                
+                                <div class="p-4 bg-white/5 rounded-xl">
+                                    <div class="flex justify-between mb-2">
+                                        <span class="text-gray-300">Activité du serveur</span>
+                                        <span class="text-secondary font-semibold" id="stat-activity">
+                                            <!-- DYNAMIC: Activity percentage -->
+                                            --
+                                        </span>
+                                    </div>
+                                    <div class="w-full bg-gray-700 rounded-full h-2">
+                                        <div class="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-1000" 
+                                             style="width: var(--activity, 75%)"></div>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="p-4 bg-white/5 rounded-xl text-center">
+                                        <div class="text-3xl font-bold text-secondary mb-1" id="stat-channels-active">
+                                            <!-- DYNAMIC: Active channels -->
+                                            --
+                                        </div>
+                                        <div class="text-sm text-gray-400">Salons actifs</div>
+                                    </div>
+                                    <div class="p-4 bg-white/5 rounded-xl text-center">
+                                        <div class="text-3xl font-bold text-secondary mb-1" id="stat-voice-users">
+                                            <!-- DYNAMIC: Voice users -->
+                                            --
+                                        </div>
+                                        <div class="text-sm text-gray-400">En vocal</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Partners Section -->
-    <section class="partners" id="partenaires">
-        <div class="container">
-            <h2 class="section-title">Nos Partenaires</h2>
-            <p class="section-subtitle">Découvre nos serveurs partenaires et rejoins leur communauté!</p>
-            
-            <div class="partners-grid">
-                <div class="partner-card">
-                    <h3><i class="fas fa-paint-brush"></i> Fleur de Lys Design</h3>
-                    <p>Boutique officielle de liveries ERLC prêtes à l'emploi. Qualité studio avec un style québécois unique.</p>
-                    <div class="partner-stats">
-                        <span class="online"><i class="fas fa-circle"></i> 22 en ligne</span>
-                        <span><i class="fas fa-users"></i> 95 membres</span>
-                    </div>
-                    <a href="https://discord.gg/AaW278m4b9" target="_blank" class="btn btn-primary">
-                        <i class="fab fa-discord"></i> Rejoindre
-                    </a>
-                </div>
-
-                <div class="partner-card">
-                    <h3><i class="fas fa-car"></i> Dispatch Québec</h3>
-                    <p>Le serveur ultime pour partager tes photos de véhicules d'urgence (Police, Pompiers, Ambulances).</p>
-                    <div class="partner-stats">
-                        <span class="online"><i class="fas fa-circle"></i> 16 en ligne</span>
-                        <span><i class="fas fa-users"></i> 50 membres</span>
-                    </div>
-                    <a href="https://discord.gg/cGVArf5UuX" target="_blank" class="btn btn-primary">
-                        <i class="fab fa-discord"></i> Rejoindre
-                    </a>
-                </div>
-
-                <div class="partner-card">
-                    <h3><i class="fas fa-city"></i> MONTREAL FR QC RP</h3>
-                    <p>Serveur RP sérieux, actif et fun basé sur ERLC. Staff actif et scénarios RP réalistes.</p>
-                    <div class="partner-stats">
-                        <span class="online"><i class="fas fa-circle"></i> 35 en ligne</span>
-                        <span><i class="fas fa-users"></i> 115 membres</span>
-                    </div>
-                    <a href="https://discord.gg/CgSjSPM4zf" target="_blank" class="btn btn-primary">
-                        <i class="fab fa-discord"></i> Rejoindre
-                    </a>
-                </div>
-
-                <div class="partner-card">
-                    <h3><i class="fas fa-building"></i> Sherbrooke RP</h3>
-                    <p>Serveur ER:LC basé sur Sherbrooke avec une expérience de roleplay réaliste et immersive.</p>
-                    <div class="partner-stats">
-                        <span class="online"><i class="fas fa-circle"></i> 54 en ligne</span>
-                        <span><i class="fas fa-users"></i> 422 membres</span>
-                    </div>
-                    <a href="https://discord.gg/zEucupdJpP" target="_blank" class="btn btn-primary">
-                        <i class="fab fa-discord"></i> Rejoindre
-                    </a>
-                </div>
-
-                <div class="partner-card">
-                    <h3><i class="fas fa-palette"></i> QC Design</h3>
-                    <p>Le studio #1 pour tes liveries Roblox au Québec. Designs propres, réalistes et sur mesure.</p>
-                    <div class="partner-stats">
-                        <span class="online"><i class="fas fa-circle"></i> 16 en ligne</span>
-                        <span><i class="fas fa-users"></i> 50 membres</span>
-                    </div>
-                    <a href="https://discord.gg/Ym37yxH42e" target="_blank" class="btn btn-primary">
-                        <i class="fab fa-discord"></i> Rejoindre
-                    </a>
-                </div>
-
-                <div class="partner-card">
-                    <h3><i class="fas fa-crown"></i> Federal Studio</h3>
-                    <p>Excellence visuelle pour les serveurs de simulation. Assets Roblox de qualité premium.</p>
-                    <div class="partner-stats">
-                        <span class="online"><i class="fas fa-circle"></i> 12 en ligne</span>
-                        <span><i class="fas fa-users"></i> 25 membres</span>
-                    </div>
-                    <a href="https://discord.gg/HaAtcKdDpX" target="_blank" class="btn btn-primary">
-                        <i class="fab fa-discord"></i> Rejoindre
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Applications Section -->
-    <section class="applications" id="candidature">
-        <div class="container">
-            <h2 class="section-title">Rejoindre le Staff</h2>
-            <p class="section-subtitle">Tu veux t'impliquer dans le développement et la sécurité du P'tit Refuge?</p>
-            
-            <div class="app-container">
-                <h3><i class="fas fa-helicopter"></i> Recrutement Staff</h3>
-                <p>Nous recherchons des membres motivés et sérieux pour renforcer notre équipe. Si tu es passionné, à l'écoute et prêt à t'investir, nous voulons te rencontrer!</p>
-                
-                <div class="app-features">
-                    <div class="app-feature">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Staff actif et à l'écoute</span>
-                    </div>
-                    <div class="app-feature">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Formation complète offerte</span>
-                    </div>
-                    <div class="app-feature">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Ambiance conviviale</span>
-                    </div>
-                    <div class="app-feature">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Évolution possible</span>
-                    </div>
-                    <div class="app-feature">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Rôles spéciaux</span>
-                    </div>
-                    <div class="app-feature">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Accès salons privés</span>
-                    </div>
-                </div>
-
-                <a href="https://melon.ly/form/7480976709597007872" target="_blank" class="btn btn-primary" style="font-size: 1.2rem; padding: 1.2rem 3rem;">
-                    <i class="fas fa-paper-plane"></i>
-                    Postuler maintenant
-                </a>
-                
-                <p style="margin-top: 2rem; font-size: 0.9rem; color: rgba(255,255,255,0.7);">
-                    <i class="fas fa-info-circle"></i> Remplis le formulaire avec sérieux. Les réponses bâclées seront refusées.
+    <section id="partenaires" class="py-32 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20 reveal">
+                <h2 class="font-serif text-4xl md:text-6xl font-bold mb-6">
+                    Nos <span class="gradient-text">Partenaires</span>
+                </h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                    Découvre nos serveurs partenaires et rejoins leurs communautés
                 </p>
             </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Partner 1 -->
+                <div class="glass-card rounded-3xl overflow-hidden hover:transform hover:scale-105 transition-all duration-500 group reveal">
+                    <div class="h-48 bg-gradient-to-br from-primary/40 to-secondary/40 flex items-center justify-center">
+                        <i class="fas fa-paint-brush text-6xl text-white/80"></i>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-2">Fleur de Lys Design</h3>
+                        <p class="text-gray-400 text-sm mb-4">Liveries ERLC professionnelles</p>
+                        <div class="flex items-center justify-between mb-6">
+                            <span class="flex items-center text-green-400 text-sm">
+                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                                <!-- DYNAMIC: Partner 1 online -->
+                                <span id="partner1-online">--</span> en ligne
+                            </span>
+                            <span class="text-gray-500 text-sm">
+                                <!-- DYNAMIC: Partner 1 members -->
+                                <span id="partner1-members">--</span> membres
+                            </span>
+                        </div>
+                        <a href="https://discord.gg/AaW278m4b9" target="_blank" 
+                           class="block w-full py-3 bg-primary/20 hover:bg-primary/40 rounded-xl text-center font-semibold transition-colors">
+                            Rejoindre <i class="fas fa-external-link-alt ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Partner 2 -->
+                <div class="glass-card rounded-3xl overflow-hidden hover:transform hover:scale-105 transition-all duration-500 group reveal">
+                    <div class="h-48 bg-gradient-to-br from-primary/40 to-secondary/40 flex items-center justify-center">
+                        <i class="fas fa-car text-6xl text-white/80"></i>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-2">Dispatch Québec</h3>
+                        <p class="text-gray-400 text-sm mb-4">Véhicules d'urgence</p>
+                        <div class="flex items-center justify-between mb-6">
+                            <span class="flex items-center text-green-400 text-sm">
+                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                                <!-- DYNAMIC: Partner 2 online -->
+                                <span id="partner2-online">--</span> en ligne
+                            </span>
+                            <span class="text-gray-500 text-sm">
+                                <!-- DYNAMIC: Partner 2 members -->
+                                <span id="partner2-members">--</span> membres
+                            </span>
+                        </div>
+                        <a href="https://discord.gg/cGVArf5UuX" target="_blank" 
+                           class="block w-full py-3 bg-primary/20 hover:bg-primary/40 rounded-xl text-center font-semibold transition-colors">
+                            Rejoindre <i class="fas fa-external-link-alt ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Partner 3 -->
+                <div class="glass-card rounded-3xl overflow-hidden hover:transform hover:scale-105 transition-all duration-500 group reveal">
+                    <div class="h-48 bg-gradient-to-br from-primary/40 to-secondary/40 flex items-center justify-center">
+                        <i class="fas fa-city text-6xl text-white/80"></i>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-2">MONTREAL FR QC RP</h3>
+                        <p class="text-gray-400 text-sm mb-4">Roleplay ERLC</p>
+                        <div class="flex items-center justify-between mb-6">
+                            <span class="flex items-center text-green-400 text-sm">
+                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                                <!-- DYNAMIC: Partner 3 online -->
+                                <span id="partner3-online">--</span> en ligne
+                            </span>
+                            <span class="text-gray-500 text-sm">
+                                <!-- DYNAMIC: Partner 3 members -->
+                                <span id="partner3-members">--</span> membres
+                            </span>
+                        </div>
+                        <a href="https://discord.gg/CgSjSPM4zf" target="_blank" 
+                           class="block w-full py-3 bg-primary/20 hover:bg-primary/40 rounded-xl text-center font-semibold transition-colors">
+                            Rejoindre <i class="fas fa-external-link-alt ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Partner 4 -->
+                <div class="glass-card rounded-3xl overflow-hidden hover:transform hover:scale-105 transition-all duration-500 group reveal">
+                    <div class="h-48 bg-gradient-to-br from-primary/40 to-secondary/40 flex items-center justify-center">
+                        <i class="fas fa-building text-6xl text-white/80"></i>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-2">Sherbrooke RP</h3>
+                        <p class="text-gray-400 text-sm mb-4">RP Sherbrooke</p>
+                        <div class="flex items-center justify-between mb-6">
+                            <span class="flex items-center text-green-400 text-sm">
+                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                                <!-- DYNAMIC: Partner 4 online -->
+                                <span id="partner4-online">--</span> en ligne
+                            </span>
+                            <span class="text-gray-500 text-sm">
+                                <!-- DYNAMIC: Partner 4 members -->
+                                <span id="partner4-members">--</span> membres
+                            </span>
+                        </div>
+                        <a href="https://discord.gg/zEucupdJpP" target="_blank" 
+                           class="block w-full py-3 bg-primary/20 hover:bg-primary/40 rounded-xl text-center font-semibold transition-colors">
+                            Rejoindre <i class="fas fa-external-link-alt ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Partner 5 -->
+                <div class="glass-card rounded-3xl overflow-hidden hover:transform hover:scale-105 transition-all duration-500 group reveal">
+                    <div class="h-48 bg-gradient-to-br from-primary/40 to-secondary/40 flex items-center justify-center">
+                        <i class="fas fa-palette text-6xl text-white/80"></i>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-2">QC Design</h3>
+                        <p class="text-gray-400 text-sm mb-4">Liveries Roblox</p>
+                        <div class="flex items-center justify-between mb-6">
+                            <span class="flex items-center text-green-400 text-sm">
+                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                                <!-- DYNAMIC: Partner 5 online -->
+                                <span id="partner5-online">--</span> en ligne
+                            </span>
+                            <span class="text-gray-500 text-sm">
+                                <!-- DYNAMIC: Partner 5 members -->
+                                <span id="partner5-members">--</span> membres
+                            </span>
+                        </div>
+                        <a href="https://discord.gg/Ym37yxH42e" target="_blank" 
+                           class="block w-full py-3 bg-primary/20 hover:bg-primary/40 rounded-xl text-center font-semibold transition-colors">
+                            Rejoindre <i class="fas fa-external-link-alt ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Partner 6 -->
+                <div class="glass-card rounded-3xl overflow-hidden hover:transform hover:scale-105 transition-all duration-500 group reveal">
+                    <div class="h-48 bg-gradient-to-br from-primary/40 to-secondary/40 flex items-center justify-center">
+                        <i class="fas fa-crown text-6xl text-white/80"></i>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-2">Federal Studio</h3>
+                        <p class="text-gray-400 text-sm mb-4">Design & Développement</p>
+                        <div class="flex items-center justify-between mb-6">
+                            <span class="flex items-center text-green-400 text-sm">
+                                <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                                <!-- DYNAMIC: Partner 6 online -->
+                                <span id="partner6-online">--</span> en ligne
+                            </span>
+                            <span class="text-gray-500 text-sm">
+                                <!-- DYNAMIC: Partner 6 members -->
+                                <span id="partner6-members">--</span> membres
+                            </span>
+                        </div>
+                        <a href="https://discord.gg/HaAtcKdDpX" target="_blank" 
+                           class="block w-full py-3 bg-primary/20 hover:bg-primary/40 rounded-xl text-center font-semibold transition-colors">
+                            Rejoindre <i class="fas fa-external-link-alt ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Channels Section -->
-    <section class="channels" id="salons">
-        <div class="container">
-            <h2 class="section-title">Nos Salons</h2>
-            <p class="section-subtitle">Découvre l'organisation de notre serveur Discord</p>
-            
-            <div class="channels-grid">
-                <div class="channel-category">
-                    <h4><i class="fas fa-door-open"></i> Douane</h4>
-                    <ul class="channel-list">
-                        <li>bienvenue</li>
-                    </ul>
+    <!-- Rules Section -->
+    <section id="regles" class="py-32 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20 reveal">
+                <h2 class="font-serif text-4xl md:text-6xl font-bold mb-6">
+                    Règlement du <span class="gradient-text">Serveur</span>
+                </h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                    Pour garantir une bonne ambiance pour tous les membres
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="glass-card p-6 rounded-2xl hover:border-primary/50 transition-colors reveal">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-handshake text-green-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-2">Respect avant tout</h3>
+                            <p class="text-gray-400 text-sm">Traite tous les membres avec respect. Insultes et harcèlement interdits.</p>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="channel-category">
-                    <h4><i class="fas fa-exclamation-circle"></i> Important</h4>
-                    <ul class="channel-list">
-                        <li>annonce</li>
-                        <li>règlement</li>
-                        <li>partenariats</li>
-                        <li>événement</li>
-                        <li>statut-serveur</li>
-                        <li>notre-pub</li>
-                    </ul>
+                <div class="glass-card p-6 rounded-2xl hover:border-primary/50 transition-colors reveal">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-comment-dots text-blue-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-2">Discussions appropriées</h3>
+                            <p class="text-gray-400 text-sm">Conversations respectueuses adaptées aux salons. Pas de disputes.</p>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="channel-category">
-                    <h4><i class="fas fa-users"></i> Communauté</h4>
-                    <ul class="channel-list">
-                        <li>discussion</li>
-                        <li>média</li>
-                        <li>commande</li>
-                        <li>suggestion</li>
-                        <li>présentations</li>
-                        <li>compte</li>
-                        <li>gaming</li>
-                    </ul>
+                <div class="glass-card p-6 rounded-2xl hover:border-primary/50 transition-colors reveal">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-phone-volume text-purple-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-2">Appels vocaux</h3>
+                            <p class="text-gray-400 text-sm">Respecte les personnes en vocal. Pas de cris ni micros saturés.</p>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="channel-category">
-                    <h4><i class="fas fa-file-alt"></i> Application</h4>
-                    <ul class="channel-list">
-                        <li>information-candidature</li>
-                        <li>candidature</li>
-                        <li>réponse-candidature</li>
-                    </ul>
+                <div class="glass-card p-6 rounded-2xl hover:border-primary/50 transition-colors reveal">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-pink-500/20 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-users text-pink-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-2">Rencontres amicales</h3>
+                            <p class="text-gray-400 text-sm">Serveur destiné aux rencontres amicales uniquement. Respecte les limites.</p>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="channel-category">
-                    <h4><i class="fas fa-headset"></i> Support</h4>
-                    <ul class="channel-list">
-                        <li>support</li>
-                        <li>sanction</li>
-                        <li>attente-staff</li>
-                        <li>mod-assiste</li>
-                    </ul>
+                <div class="glass-card p-6 rounded-2xl hover:border-primary/50 transition-colors reveal">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-bullhorn text-yellow-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-2">Publicité</h3>
+                            <p class="text-gray-400 text-sm">Publicité interdite sans autorisation du staff.</p>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="channel-category">
-                    <h4><i class="fas fa-volume-up"></i> Vocaux</h4>
-                    <ul class="channel-list">
-                        <li>Salon 1</li>
-                        <li>Salon 2</li>
-                        <li>Salon 3</li>
-                        <li>AFK</li>
-                    </ul>
+                <div class="glass-card p-6 rounded-2xl hover:border-primary/50 transition-colors reveal">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-red-500/20 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-ban text-red-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-2">Contenu interdit</h3>
+                            <p class="text-gray-400 text-sm">Aucun contenu illégal, choquant ou violent. Pas de spam.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl hover:border-primary/50 transition-colors reveal">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-indigo-500/20 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-user-shield text-indigo-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-2">Confidentialité</h3>
+                            <p class="text-gray-400 text-sm">Ne partage pas les informations personnelles d'un membre.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl hover:border-primary/50 transition-colors reveal">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-orange-500/20 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-user-tag text-orange-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-2">Pseudonymes</h3>
+                            <p class="text-gray-400 text-sm">Utilise un pseudonyme approprié. Pas de contenu offensant.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl hover:border-primary/50 transition-colors reveal">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-cyan-500/20 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-gavel text-cyan-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-2">Modération</h3>
+                            <p class="text-gray-400 text-sm">Respecte les décisions du staff. Contacte en MP en cas de désaccord.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Application Section -->
+    <section id="candidature" class="py-32 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-secondary/10 to-transparent"></div>
+        
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="glass-card rounded-3xl p-12 md:p-20 reveal glow">
+                <div class="text-center mb-12">
+                    <div class="inline-flex items-center justify-center w-20 h-20 bg-primary/20 rounded-full mb-6">
+                        <i class="fas fa-helicopter text-4xl text-secondary"></i>
+                    </div>
+                    <h2 class="font-serif text-4xl md:text-5xl font-bold mb-6">
+                        Rejoindre le <span class="gradient-text">Staff</span>
+                    </h2>
+                    <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                        Tu veux t'impliquer dans le développement et la sécurité du P'tit Refuge? Nous recherchons des membres motivés!
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 mb-12">
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3 p-4 bg-white/5 rounded-xl">
+                            <i class="fas fa-check-circle text-green-400 text-xl"></i>
+                            <span class="text-gray-300">Staff actif et à l'écoute</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-4 bg-white/5 rounded-xl">
+                            <i class="fas fa-check-circle text-green-400 text-xl"></i>
+                            <span class="text-gray-300">Formation complète offerte</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-4 bg-white/5 rounded-xl">
+                            <i class="fas fa-check-circle text-green-400 text-xl"></i>
+                            <span class="text-gray-300">Ambiance conviviale</span>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3 p-4 bg-white/5 rounded-xl">
+                            <i class="fas fa-check-circle text-green-400 text-xl"></i>
+                            <span class="text-gray-300">Évolution possible</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-4 bg-white/5 rounded-xl">
+                            <i class="fas fa-check-circle text-green-400 text-xl"></i>
+                            <span class="text-gray-300">Rôles spéciaux</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-4 bg-white/5 rounded-xl">
+                            <i class="fas fa-check-circle text-green-400 text-xl"></i>
+                            <span class="text-gray-300">Accès salons privés</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <a href="https://melon.ly/form/7480976709597007872" target="_blank" 
+                       class="inline-flex items-center space-x-2 px-10 py-5 bg-gradient-to-r from-primary to-secondary rounded-full font-bold text-lg glow-hover transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-paper-plane text-xl"></i>
+                        <span>Postuler maintenant</span>
+                    </a>
+                    <p class="mt-6 text-sm text-gray-500">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        Remplis le formulaire avec sérieux. Les réponses bâclées seront refusées.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-32 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="font-serif text-4xl md:text-6xl font-bold mb-8 reveal">
+                Prêt à nous <span class="gradient-text">rejoindre</span>?
+            </h2>
+            <p class="text-xl text-gray-400 mb-12 max-w-2xl mx-auto reveal">
+                Rejoins Le P'tit Refuge dès maintenant et fais partie d'une communauté québécoise active et bienveillante!
+            </p>
+            <a href="https://discord.gg/NYUWnWTb2g" target="_blank" 
+               class="inline-flex items-center space-x-2 px-10 py-5 bg-primary rounded-full font-bold text-xl glow-hover transition-all duration-300 transform hover:scale-105 reveal">
+                <i class="fab fa-discord text-3xl"></i>
+                <span>Rejoindre le serveur</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-logo">
-                <i class="fas fa-fleur-de-lis"></i> Le P'tit Refuge
+    <footer class="border-t border-white/10 bg-darker py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div class="col-span-2">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <img src="https://cdn.discordapp.com/attachments/1459601679346303117/1528041382135074876/zj598dz.png" 
+                             alt="Logo" 
+                             class="w-10 h-10 rounded-full">
+                        <span class="font-serif text-xl font-bold">Le P'tit Refuge</span>
+                    </div>
+                    <p class="text-gray-400 text-sm max-w-sm">
+                        Un serveur Discord québécois convivial pour discuter, jouer et rencontrer de nouvelles personnes dans une ambiance chaleureuse.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Liens rapides</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#accueil" class="hover:text-secondary transition-colors">Accueil</a></li>
+                        <li><a href="#apropos" class="hover:text-secondary transition-colors">À propos</a></li>
+                        <li><a href="#regles" class="hover:text-secondary transition-colors">Règles</a></li>
+                        <li><a href="#candidature" class="hover:text-secondary transition-colors">Candidature</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Communauté</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="https://discord.gg/NYUWnWTb2g" target="_blank" class="hover:text-secondary transition-colors">Discord</a></li>
+                        <li><a href="#partenaires" class="hover:text-secondary transition-colors">Partenaires</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">Support</a></li>
+                    </ul>
+                </div>
             </div>
-            <p style="color: rgba(255,255,255,0.8); max-width: 600px; margin: 0 auto;">
-                Un serveur Discord québécois convivial pour discuter, jouer et rencontrer de nouvelles personnes dans une ambiance chaleureuse.
-            </p>
             
-            <div class="social-links">
-                <a href="https://discord.gg/NYUWnWTb2g" target="_blank" title="Discord">
-                    <i class="fab fa-discord"></i>
-                </a>
-            </div>
-
-            <div class="footer-links">
-                <a href="#accueil">Accueil</a>
-                <a href="#apropos">À propos</a>
-                <a href="#regles">Règles</a>
-                <a href="#partenaires">Partenaires</a>
-                <a href="#candidature">Candidature</a>
-            </div>
-
-            <div class="copyright">
-                <p>&copy; 2026 Le P'tit Refuge. Tous droits réservés.</p>
-                <p style="margin-top: 0.5rem; font-size: 0.9rem;">
-                    Créé avec <i class="fas fa-heart" style="color: var(--accent);"></i> au Québec
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 text-sm">
+                    &copy; 2026 Le P'tit Refuge. Tous droits réservés.
                 </p>
+                <div class="flex items-center space-x-2 mt-4 md:mt-0 text-gray-500 text-sm">
+                    <span>Créé avec</span>
+                    <i class="fas fa-heart text-red-500"></i>
+                    <span>au Québec</span>
+                </div>
             </div>
         </div>
     </footer>
 
     <script>
-        // Smooth scrolling
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-lg');
+            } else {
+                navbar.classList.remove('shadow-lg');
+            }
+        });
+
+        // Reveal animation on scroll
+        const revealElements = document.querySelectorAll('.reveal');
+        
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero animation
+        gsap.from('.hero-content', {
+            duration: 1,
+            y: 50,
+            opacity: 0,
+            ease: 'power3.out'
+        });
+
+        // Stats counter animation
+        function animateCounter(id, target, duration = 2000) {
+            const element = document.getElementById(id);
+            if (!element) return;
+            
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = 0;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target.toLocaleString();
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current).toLocaleString();
+                }
+            }, 16);
+        }
+
+        // DYNAMIC DATA UPDATE FUNCTION
+        // This function should be called regularly to update dynamic stats
+        function updateDynamicStats() {
+            // EXAMPLE: Update these values from your Discord bot API
+            const dynamicData = {
+                // Main server stats
+                members: 0,        // Total members
+                online: 0,         // Currently online
+                newMembers: 0,     // New members this week
+                messagesToday: 0,  // Messages today
+                peakOnline: 0,     // Peak online count
+                activity: 0,       // Activity percentage (0-100)
+                activeChannels: 0, // Number of active channels
+                voiceUsers: 0,     // Users in voice channels
+                
+                // Partner servers stats
+                partners: [
+                    { online: 0, members: 0 }, // Partner 1
+                    { online: 0, members: 0 }, // Partner 2
+                    { online: 0, members: 0 }, // Partner 3
+                    { online: 0, members: 0 }, // Partner 4
+                    { online: 0, members: 0 }, // Partner 5
+                    { online: 0, members: 0 }, // Partner 6
+                ]
+            };
+
+            // Update main stats
+            if (dynamicData.members > 0) {
+                document.getElementById('stat-members').textContent = dynamicData.members.toLocaleString();
+            }
+            if (dynamicData.online > 0) {
+                document.getElementById('stat-online').textContent = dynamicData.online.toLocaleString();
+            }
+            if (dynamicData.newMembers > 0) {
+                document.getElementById('stat-new-members').textContent = dynamicData.newMembers.toLocaleString();
+            }
+            if (dynamicData.messagesToday > 0) {
+                document.getElementById('stat-messages-today').textContent = dynamicData.messagesToday.toLocaleString();
+            }
+            if (dynamicData.peakOnline > 0) {
+                document.getElementById('stat-peak-online').textContent = dynamicData.peakOnline.toLocaleString();
+            }
+            if (dynamicData.activity > 0) {
+                document.getElementById('stat-activity').textContent = dynamicData.activity + '%';
+                document.documentElement.style.setProperty('--activity', dynamicData.activity + '%');
+            }
+            if (dynamicData.activeChannels > 0) {
+                document.getElementById('stat-channels-active').textContent = dynamicData.activeChannels.toLocaleString();
+            }
+            if (dynamicData.voiceUsers > 0) {
+                document.getElementById('stat-voice-users').textContent = dynamicData.voiceUsers.toLocaleString();
+            }
+
+            // Update partner stats
+            dynamicData.partners.forEach((partner, index) => {
+                if (partner.online > 0) {
+                    document.getElementById(`partner${index + 1}-online`).textContent = partner.online;
+                }
+                if (partner.members > 0) {
+                    document.getElementById(`partner${index + 1}-members`).textContent = partner.members;
+                }
+            });
+        }
+
+        // Call update function on load (with demo data for now)
+        window.addEventListener('load', () => {
+            // DEMO DATA - Replace with actual API calls
+            setTimeout(() => {
+                updateDynamicStats();
+            }, 1000);
+            
+            // Update stats every 5 minutes
+            setInterval(updateDynamicStats, 300000);
+        });
+
+        // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -1072,52 +1011,18 @@
                         behavior: 'smooth',
                         block: 'start'
                     });
+                    // Close mobile menu if open
+                    document.getElementById('mobile-menu').classList.add('hidden');
                 }
             });
         });
 
-        // Animation on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: "0px 0px -100px 0px"
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('fade-in');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.about-card, .rule-card, .partner-card, .channel-category').forEach(el => {
-            observer.observe(el);
-        });
-
-        // Mobile menu toggle
-        const mobileMenu = document.querySelector('.mobile-menu');
-        const navLinks = document.querySelector('.nav-links');
-
-        mobileMenu.addEventListener('click', () => {
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-            navLinks.style.position = 'absolute';
-            navLinks.style.top = '100%';
-            navLinks.style.left = '0';
-            navLinks.style.right = '0';
-            navLinks.style.background = 'var(--gris-fonce)';
-            navLinks.style.flexDirection = 'column';
-            navLinks.style.padding = '1rem';
-            navLinks.style.boxShadow = '0 10px 20px rgba(0,0,0,0.3)';
-        });
-
-        // Navbar background on scroll
+        // Add parallax effect to hero section
         window.addEventListener('scroll', () => {
-            const nav = document.querySelector('nav');
-            if (window.scrollY > 100) {
-                nav.style.background = 'rgba(26, 26, 46, 0.98)';
-            } else {
-                nav.style.background = 'rgba(26, 26, 46, 0.95)';
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('#accueil');
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
             }
         });
     </script>
